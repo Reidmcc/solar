@@ -1,4 +1,5 @@
 export interface PublicKeyData {
+  accountID?: string
   name: string
   password: boolean
   publicKey: string

@@ -7,6 +7,11 @@ import getKeyStore from "../platform/key-store"
 export interface Account {
   id: string
   name: string
+
+  // Usually the same as the `publicKey`, but for multisig may not
+  // `accountID` is the master key pair's public key,
+  // `publicKey`/`getPrivateKey()` is the key pair that we possess
+  accountID: string
   publicKey: string
   requiresPassword: boolean
   testnet: boolean
@@ -18,6 +23,7 @@ export type NetworkID = "mainnet" | "testnet"
 interface NewAccountData {
   id?: string
   name: string
+  accountID?: string
   keypair: Keypair
   password: string | null
   testnet: boolean
@@ -43,6 +49,7 @@ function createAccountInstance(keyID: string): Account {
   return {
     id: keyID,
     name: publicData.name,
+    accountID: publicData.accountID || publicData.publicKey,
     publicKey: publicData.publicKey,
     requiresPassword: publicData.password,
     testnet: publicData.testnet,
@@ -126,6 +133,7 @@ interface Props {
 export function AccountsProvider(props: Props) {
   const [accounts, setAccounts] = useState<Account[]>(initialAccounts)
   const [networkSwitch, setNetworkSwitch] = useState<NetworkID>(initialNetwork)
+        accountID: accountData.accountID,
 
   const createAccount = async (accountData: NewAccountData) => {
     const account = await createAccountInKeyStore(accounts, accountData)
