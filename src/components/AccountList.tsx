@@ -84,7 +84,7 @@ function AccountCard(props: {
   )
   const badgeContent = pendingSignatureRequests.length > 0 ? pendingSignatureRequests.length : null
   return (
-    <StyledCard elevation={5} onClick={onClick} style={{ background: "white", color: "black" }}>
+    <StyledCard elevation={5} onClick={onClick} style={{ ...props.style, background: "white", color: "black" }}>
       <StyledBadge badgeContent={badgeContent} color="secondary" style={{ width: "100%" }}>
         <VerticalLayout height="100px" justifyContent="space-evenly" textAlign="left">
           <HorizontalLayout margin="0 0 20px">
@@ -100,7 +100,7 @@ function AccountCard(props: {
             </Box>
           </HorizontalLayout>
           <Box fontSize="120%">
-            <AccountBalances publicKey={props.account.publicKey} testnet={props.account.testnet} />
+            <AccountBalances publicKey={props.account.accountID || props.account.publicKey} testnet={props.account.testnet} />
           </Box>
         </VerticalLayout>
       </StyledBadge>

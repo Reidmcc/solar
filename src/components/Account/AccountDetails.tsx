@@ -1,6 +1,7 @@
 import React from "react"
 import Typography from "@material-ui/core/Typography"
 import { Account } from "../../context/accounts"
+import { SettingsContextType } from "../../context/settings"
 import AccountBalances from "./AccountBalances"
 
 const DetailContent = (props: { children: React.ReactNode }) => {
@@ -22,16 +23,23 @@ const AccountPublicKey = (props: { publicKey: string }) => {
   return <span style={style}>{props.publicKey}</span>
 }
 
-const AccountDetails = (props: { account: Account }) => {
+const AccountDetails = (props: { account: Account; settings: SettingsContextType }) => {
   const { account } = props
+  const isCosignatureKeypair =
+    props.settings.multiSignature && account.accountID && account.accountID !== account.publicKey
   return (
     <div>
       <DetailContent>
-        <AccountBalances publicKey={account.publicKey} testnet={account.testnet} />
+        <AccountBalances publicKey={account.accountID || account.publicKey} testnet={account.testnet} />
       </DetailContent>
       <DetailContent>
-        <AccountPublicKey publicKey={account.publicKey} />
+        <AccountPublicKey publicKey={account.accountID || account.publicKey} />
       </DetailContent>
+      {isCosignatureKeypair ? (
+        <DetailContent>
+          <AccountPublicKey publicKey={account.publicKey} /> (Co-Signature Key)
+        </DetailContent>
+      ) : null}
     </div>
   )
 }

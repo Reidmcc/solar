@@ -9,6 +9,7 @@ import EditIcon from "@material-ui/icons/Edit"
 import { Keypair } from "stellar-sdk"
 import { Account } from "../../context/accounts"
 import { trackError } from "../../context/notifications"
+import { SettingsContextType } from "../../context/settings"
 import { renderFormFieldError } from "../../lib/errors"
 import QRImportDialog from "../Dialog/QRImport"
 import QRCodeIcon from "../Icon/QRCode"
@@ -22,7 +23,9 @@ export interface AccountCreationValues {
   password: string
   passwordRepeat: string
   privateKey: string
+  accountID: string
   createNewKey: boolean
+  isCosigKeypair: boolean
   setPassword: boolean
 }
 
@@ -57,6 +60,9 @@ function validateFormValues(formValues: AccountCreationValues) {
   if (!formValues.createNewKey && !formValues.privateKey.match(/^S[A-Z0-9]{55}$/)) {
     errors.privateKey = new Error("Invalid stellar private key.")
   }
+  if (!formValues.isCosigKeypair && !formValues.accountID.match(/^G[A-Z0-9]{55}$/)) {
+    errors.accountID = new Error("Invalid stellar public key.")
+  }
 
   const success = Object.keys(errors).length === 0
   return { errors, success }
@@ -65,6 +71,7 @@ function validateFormValues(formValues: AccountCreationValues) {
 interface AccountCreationFormProps {
   errors: AccountCreationErrors
   formValues: AccountCreationValues
+  settings: SettingsContextType
   testnet: boolean
   onCancel(): void
   onOpenQRScanner(): void
@@ -74,9 +81,10 @@ interface AccountCreationFormProps {
 
 const AccountCreationForm = (props: AccountCreationFormProps) => {
   const { errors, formValues, setFormValue } = props
+  const minHeight = 400 + (props.settings.multiSignature ? 100 : 0)
   return (
     <form onSubmit={props.onSubmit}>
-      <VerticalLayout minHeight="400px" justifyContent="space-between">
+      <VerticalLayout minHeight={minHeight} justifyContent="space-between">
         <Box>
           <TextField
             error={Boolean(errors.name)}
@@ -169,6 +177,52 @@ const AccountCreationForm = (props: AccountCreationFormProps) => {
             </Button>
           </HorizontalLayout>
         </ToggleSection>
+        <ToggleSection
+          checked={formValues.isCosigKeypair}
+          hidden={!props.settings.multiSignature}
+          onChange={() => setFormValue("isCosigKeypair", !formValues.isCosigKeypair as any)}
+          title="Co-Signer Only"
+        >
+          <Typography
+            color={formValues.isCosigKeypair ? "default" : "textSecondary"}
+            variant="body1"
+            style={{ margin: "12px 0 0" }}
+          >
+            Check this option to add a key pair that does not represent an account of its own, but acts as an additional
+            signer of a remote multi-signature account. The remote account still has to add this key pair as a
+            co-signer.
+          </Typography>
+          <Typography
+            color={formValues.isCosigKeypair ? "default" : "textSecondary"}
+            variant="body1"
+            style={{ margin: "12px 0 0" }}
+          >
+            This co-signature account will show up next to your other accounts, but won't have a balance of its own. It
+            will show the balance and transactions of the remote multi-signature account instead.
+          </Typography>
+          <HorizontalLayout>
+            <TextField
+              disabled={!formValues.isCosigKeypair}
+              error={Boolean(errors.accountID)}
+              label={errors.accountID ? renderFormFieldError(errors.accountID) : "Account public key"}
+              placeholder="GABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGHIJKLMNOPQRS"
+              fullWidth
+              margin="normal"
+              value={formValues.accountID}
+              onChange={event => setFormValue("accountID", event.target.value)}
+            />
+            <HorizontalMargin size={32} />
+            <Button
+              disabled={!formValues.isCosigKeypair}
+              variant="outlined"
+              onClick={props.onOpenQRScanner}
+              style={{ height: 48 }}
+            >
+              <QRCodeIcon style={{ marginRight: 16 }} />
+              Scan
+            </Button>
+          </HorizontalLayout>
+        </ToggleSection>
         <HorizontalLayout justifyContent="end" alignItems="center" margin="64px 0 0" width="auto">
           <Button variant="contained" onClick={props.onCancel}>
             <ButtonIconLabel label="Cancel">
@@ -189,6 +243,7 @@ const AccountCreationForm = (props: AccountCreationFormProps) => {
 
 interface Props {
   accounts: Account[]
+  settings: SettingsContextType
   testnet: boolean
   onCancel(): void
   onSubmit(formValues: AccountCreationValues): void
@@ -208,7 +263,9 @@ class StatefulAccountCreationForm extends React.Component<Props, State> {
       password: "",
       passwordRepeat: "",
       privateKey: "",
+      accountID: "",
       createNewKey: true,
+      isCosigKeypair: false,
       setPassword: true
     },
     qrScannerOpen: false
@@ -263,6 +320,7 @@ class StatefulAccountCreationForm extends React.Component<Props, State> {
           onOpenQRScanner={this.openQRScanner}
           onSubmit={this.submit}
           setFormValue={this.setFormValue}
+          settings={this.props.settings}
         />
         <QRImportDialog
           open={this.state.qrScannerOpen}

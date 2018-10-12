@@ -6,12 +6,16 @@ import { Box } from "./Box"
 interface Props {
   checked: boolean
   children: React.ReactNode
+  hidden?: boolean
   title: React.ReactNode
   onChange?: () => void
   style?: React.CSSProperties
 }
 
 const ToggleSection = (props: Props) => {
+  if (props.hidden) {
+    return null
+  }
   return (
     <Box style={{ display: "flex", margin: "24px 0 0", ...props.style }}>
       <Box width={70} shrink={0}>

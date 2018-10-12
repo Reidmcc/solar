@@ -9,6 +9,7 @@ import AccountCreationForm, { AccountCreationValues } from "../components/Form/C
 import { Box } from "../components/Layout/Box"
 import { AccountsContext } from "../context/accounts"
 import { trackError } from "../context/notifications"
+import { SettingsContext } from "../context/settings"
 
 interface Props {
   history: History
@@ -17,12 +18,15 @@ interface Props {
 
 function CreateAccountPage(props: Props) {
   const { accounts, createAccount } = useContext(AccountsContext)
+  const settings = useContext(SettingsContext)
 
   const onCreateAccount = async (formValues: AccountCreationValues) => {
     try {
+      const keypair = Keypair.fromSecret(formValues.privateKey)
       const account = await createAccount({
         name: formValues.name,
-        keypair: Keypair.fromSecret(formValues.privateKey),
+        keypair,
+        accountID: formValues.isCosigKeypair ? formValues.accountID : keypair.publicKey(),
         password: formValues.setPassword ? formValues.password : null,
         testnet: props.testnet
       })
@@ -43,6 +47,7 @@ function CreateAccountPage(props: Props) {
           accounts={accounts}
           onCancel={onClose}
           onSubmit={onCreateAccount}
+          settings={settings}
           testnet={props.testnet}
         />
       </Box>

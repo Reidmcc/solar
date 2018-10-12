@@ -101,7 +101,7 @@ function AccountPage(props: Props) {
   }
 
   const horizon = useHorizon(account.testnet)
-  const recentTxs = useRecentTransactions(account.publicKey, account.testnet)
+  const recentTxs = useRecentTransactions(account.accountID || account.publicKey, account.testnet)
 
   return (
     <>
@@ -114,7 +114,7 @@ function AccountPage(props: Props) {
           onRenameAccount={props.renameAccount}
         >
           <VerticalMargin size={28} />
-          <AccountDetails account={account} />
+          <AccountDetails account={account} settings={props.settings} />
           <Box margin="24px 0 0">
             <AccountActions account={account} onOpenPaymentDrawer={props.onOpenPaymentDrawer} />
           </Box>
@@ -144,7 +144,7 @@ function AccountPage(props: Props) {
             </Typography>
             {account.testnet ? (
               <Typography align="center" style={{ paddingBottom: 30 }}>
-                <FriendbotButton horizon={horizon} publicKey={account.publicKey} />
+                <FriendbotButton horizon={horizon} publicKey={account.accountID || account.publicKey} />
               </Typography>
             ) : null}
           </>

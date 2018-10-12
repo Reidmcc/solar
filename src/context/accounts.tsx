@@ -85,6 +85,7 @@ async function createAccountInKeyStore(accounts: Account[], accountData: NewAcco
     { privateKey: accountData.keypair.secret() },
     {
       name: accountData.name,
+      accountID: accountData.accountID,
       password: accountData.password !== null,
       publicKey: accountData.keypair.publicKey(),
       testnet: accountData.testnet
@@ -133,7 +134,6 @@ interface Props {
 export function AccountsProvider(props: Props) {
   const [accounts, setAccounts] = useState<Account[]>(initialAccounts)
   const [networkSwitch, setNetworkSwitch] = useState<NetworkID>(initialNetwork)
-        accountID: accountData.accountID,
 
   const createAccount = async (accountData: NewAccountData) => {
     const account = await createAccountInKeyStore(accounts, accountData)

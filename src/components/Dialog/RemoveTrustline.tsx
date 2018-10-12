@@ -73,7 +73,7 @@ function RemoveTrustlineDialog(props: Props) {
 }
 
 function ConnectedRemoveTrustlineDialog(props: Omit<Props, "balances" | "horizon" | "sendTransaction">) {
-  const accountData = useAccountData(props.account.publicKey, props.account.testnet)
+  const accountData = useAccountData(props.account.accountID || props.account.publicKey, props.account.testnet)
 
   const closeAfterTimeout = () => {
     // Close automatically a second after successful submission
