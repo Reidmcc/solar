@@ -216,7 +216,7 @@ const AccountCreationForm = (props: AccountCreationFormProps) => {
               disabled={!formValues.isCosigKeypair}
               variant="outlined"
               onClick={props.onOpenQRScanner}
-              style={{ height: 48 }}
+              style={{ alignSelf: "center", height: 48 }}
             >
               <QRCodeIcon style={{ marginRight: 16 }} />
               Scan
