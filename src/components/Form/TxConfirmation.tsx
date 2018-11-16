@@ -5,6 +5,7 @@ import CheckIcon from "@material-ui/icons/Check"
 import { Transaction } from "stellar-sdk"
 import { Account } from "../../context/accounts"
 import { renderFormFieldError } from "../../lib/errors"
+import { SignatureRequest } from "../../lib/multisig-service"
 import { HorizontalLayout, VerticalLayout } from "../Layout/Box"
 import ButtonIconLabel from "../ButtonIconLabel"
 import TransactionSummary from "../TransactionSummary"
@@ -16,6 +17,7 @@ interface FormValues {
 interface Props {
   account: Account
   disabled?: boolean
+  signatureRequest: SignatureRequest | null
   transaction: Transaction
   onConfirm?: (formValues: FormValues) => any
   onCancel?: () => any
@@ -65,7 +67,7 @@ class TxConfirmationForm extends React.Component<Props, State> {
   }
 
   render() {
-    const { account, disabled, transaction, onCancel = () => undefined } = this.props
+    const { account, disabled, signatureRequest, transaction, onCancel = () => undefined } = this.props
 
     return (
       <form onSubmit={this.onSubmit}>

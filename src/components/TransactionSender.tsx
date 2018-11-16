@@ -47,7 +47,7 @@ const SubmissionProgressOverlay = (props: {
 
 interface RenderFunctionProps {
   horizon: Server
-  sendTransaction: (transaction: Transaction) => void
+  sendTransaction: (transaction: Transaction, signatureRequest?: SignatureRequest) => void
 }
 
 interface Props {
@@ -169,7 +169,7 @@ class TransactionSender extends React.Component<Props, State> {
   }
 
   render() {
-    const { submissionFailed, submissionPromise, transaction } = this.state
+    const { signatureRequest, submissionFailed, submissionPromise, transaction } = this.state
 
     const content = this.props.children({
       horizon: this.props.horizon,
@@ -183,6 +183,7 @@ class TransactionSender extends React.Component<Props, State> {
           open={Boolean(transaction)}
           account={this.props.account}
           disabled={!transaction || hasSigned(transaction, this.props.account.publicKey)}
+          signatureRequest={signatureRequest}
           transaction={transaction}
           onClose={this.clearTransaction}
           onSubmitTransaction={this.submitTransaction}

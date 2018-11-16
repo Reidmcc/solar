@@ -4,6 +4,7 @@ import Slide, { SlideProps } from "@material-ui/core/Slide"
 import Typography from "@material-ui/core/Typography"
 import { Transaction, TransactionOperation } from "stellar-sdk"
 import { Account } from "../../context/accounts"
+import { SignatureRequest } from "../../lib/multisig-service"
 import TxConfirmationForm from "../Form/TxConfirmation"
 import { Box } from "../Layout/Box"
 import TestnetBadge from "./TestnetBadge"
@@ -17,6 +18,7 @@ interface TxConfirmationDialogProps {
   account: Account
   disabled?: boolean
   open: boolean
+  signatureRequest: SignatureRequest | null
   transaction: Transaction | null
   onClose: () => void
   onSubmitTransaction: (tx: Transaction, formValues: { password: string | null }) => void
@@ -34,6 +36,7 @@ const TxConfirmationDialog = (props: TxConfirmationDialogProps) => {
         <Typography variant="headline" component="h2">
           {title} {props.account.testnet ? <TestnetBadge style={{ marginLeft: 8 }} /> : null}
         </Typography>
+        {/* `props.transaction` might be null when animating, because the transaction already got reset */}
         {props.transaction ? (
           <div style={{ marginTop: 24 }}>
             <TxConfirmationForm
@@ -42,6 +45,7 @@ const TxConfirmationDialog = (props: TxConfirmationDialogProps) => {
               disabled={props.disabled}
               onConfirm={formValues => props.onSubmitTransaction(props.transaction as Transaction, formValues)}
               onCancel={props.onClose}
+              signatureRequest={props.signatureRequest}
             />
           </div>
         ) : null}
