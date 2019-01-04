@@ -115,7 +115,7 @@ function AccountPage(props: Props) {
         >
           <VerticalMargin size={28} />
           <AccountDetails account={account} settings={props.settings} />
-          <Box margin="24px 0 0">
+          <Box margin="28px 0 0">
             <AccountActions account={account} onOpenPaymentDrawer={props.onOpenPaymentDrawer} />
           </Box>
         </AccountHeaderCard>

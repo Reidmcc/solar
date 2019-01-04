@@ -5,8 +5,15 @@ import { SettingsContextType } from "../../context/settings"
 import AccountBalances from "./AccountBalances"
 
 const DetailContent = (props: { children: React.ReactNode }) => {
+  const style: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    marginTop: 8,
+    marginBottom: 8,
+    fontSize: "1.2rem"
+  }
   return (
-    <Typography color="inherit" component="div" variant="body1" style={{ marginTop: 8, fontSize: "1.2rem" }}>
+    <Typography color="inherit" component="div" variant="body1" style={style}>
       {props.children}
     </Typography>
   )
@@ -37,7 +44,8 @@ const AccountDetails = (props: { account: Account; settings: SettingsContextType
       </DetailContent>
       {isCosignatureKeypair ? (
         <DetailContent>
-          <AccountPublicKey publicKey={account.publicKey} /> (Co-Signature Key)
+          <AccountPublicKey publicKey={account.publicKey} />
+          &nbsp;(Co-Signature Key)
         </DetailContent>
       ) : null}
     </div>
