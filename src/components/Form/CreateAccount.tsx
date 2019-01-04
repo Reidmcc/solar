@@ -60,7 +60,7 @@ function validateFormValues(formValues: AccountCreationValues) {
   if (!formValues.createNewKey && !formValues.privateKey.match(/^S[A-Z0-9]{55}$/)) {
     errors.privateKey = new Error("Invalid stellar private key.")
   }
-  if (!formValues.isCosigKeypair && !formValues.accountID.match(/^G[A-Z0-9]{55}$/)) {
+  if (formValues.isCosigKeypair && !formValues.accountID.match(/^G[A-Z0-9]{55}$/)) {
     errors.accountID = new Error("Invalid stellar public key.")
   }
 
@@ -181,16 +181,15 @@ const AccountCreationForm = (props: AccountCreationFormProps) => {
           checked={formValues.isCosigKeypair}
           hidden={!props.settings.multiSignature}
           onChange={() => setFormValue("isCosigKeypair", !formValues.isCosigKeypair as any)}
-          title="Co-Signer Only"
+          title="Co-Signer to Other Account"
         >
           <Typography
             color={formValues.isCosigKeypair ? "default" : "textSecondary"}
             variant="body1"
             style={{ margin: "12px 0 0" }}
           >
-            Check this option to add a key pair that does not represent an account of its own, but acts as an additional
-            signer of a remote multi-signature account. The remote account still has to add this key pair as a
-            co-signer.
+            Check this option to add a key pair that does not represent an account of its own, but acts as a co-signer
+            of a remote multi-signature account. The remote account still has to add this key pair as a co-signer.
           </Typography>
           <Typography
             color={formValues.isCosigKeypair ? "default" : "textSecondary"}
