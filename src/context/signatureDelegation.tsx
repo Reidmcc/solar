@@ -27,24 +27,27 @@ function useSignatureRequestSubscription(multiSignatureServiceURL: string, accou
   const subscribersRef = useRef<SubscribersState>({ newRequestSubscribers: [] })
   const [pendingSignatureRequests, setPendingSignatureRequests] = useState<SignatureRequest[]>([])
 
-  useEffect(() => {
-    fetchSignatureRequests(multiSignatureServiceURL, accountIDs)
-      .then(requests => setPendingSignatureRequests(requests.reverse()))
-      .catch(trackError)
+  useEffect(
+    () => {
+      fetchSignatureRequests(multiSignatureServiceURL, accountIDs)
+        .then(requests => setPendingSignatureRequests(requests.reverse()))
+        .catch(trackError)
 
-    const unsubscribe = subscribeToSignatureRequests(multiSignatureServiceURL, accountIDs, {
-      onNewSignatureRequest: signatureRequest => {
-        setPendingSignatureRequests(prevPending => [signatureRequest, ...prevPending])
-        subscribersRef.current.newRequestSubscribers.forEach(subscriber => subscriber(signatureRequest))
-      },
-      onSignatureRequestSubmitted: signatureRequest => {
-        setPendingSignatureRequests(prevPending =>
-          prevPending.filter(request => request.hash !== signatureRequest.hash)
-        )
-      }
-    })
-    return unsubscribe
-  }, accounts)
+      const unsubscribe = subscribeToSignatureRequests(multiSignatureServiceURL, accountIDs, {
+        onNewSignatureRequest: signatureRequest => {
+          setPendingSignatureRequests(prevPending => [signatureRequest, ...prevPending])
+          subscribersRef.current.newRequestSubscribers.forEach(subscriber => subscriber(signatureRequest))
+        },
+        onSignatureRequestSubmitted: signatureRequest => {
+          setPendingSignatureRequests(prevPending =>
+            prevPending.filter(request => request.hash !== signatureRequest.hash)
+          )
+        }
+      })
+      return unsubscribe
+    },
+    [accounts]
+  )
 
   const subscribeToNewSignatureRequests = (callback: SignatureRequestCallback) => {
     subscribersRef.current.newRequestSubscribers.push(callback)
