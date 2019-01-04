@@ -74,7 +74,7 @@ function AccountCard(props: {
   pendingSignatureRequests: SignatureRequest[]
   style?: React.CSSProperties
 }) {
-  const accountData = useAccountData(props.account.accountID || props.account.publicKey, props.account.testnet)
+  const accountData = useAccountData(props.account)
 
   const onClick = () => props.history.push(routes.account(props.account.id))
   const pendingSignatureRequests = props.pendingSignatureRequests.filter(
@@ -100,10 +100,7 @@ function AccountCard(props: {
             </Box>
           </HorizontalLayout>
           <Box fontSize="120%">
-            <AccountBalances
-              publicKey={props.account.accountID || props.account.publicKey}
-              testnet={props.account.testnet}
-            />
+            <AccountBalances account={props.account} />
           </Box>
         </VerticalLayout>
       </StyledBadge>

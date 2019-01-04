@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { Server } from "stellar-sdk"
+import { Account } from "./context/accounts"
 import { subscribeToAccount, subscribeToRecentTxs, ObservedAccountData, ObservedRecentTxs } from "./lib/subscriptions"
 
 // TODO: Should probably be stored in context
@@ -10,7 +11,25 @@ export function useHorizon(testnet: boolean = false) {
   return testnet ? horizonTestnet : horizonLivenet
 }
 
-export function useAccountData(accountID: string, testnet: boolean): ObservedAccountData {
+function resolveAccountArgs(...args: [Account] | [string, boolean]): { accountID: string; testnet: boolean } {
+  if (args.length === 1) {
+    return {
+      accountID: args[0].accountID || args[0].publicKey,
+      testnet: args[0].testnet
+    }
+  } else {
+    return {
+      accountID: args[0],
+      testnet: args[1]
+    }
+  }
+}
+
+export function useAccountData(account: Account): ObservedAccountData
+export function useAccountData(accountID: string, testnet: boolean): ObservedAccountData
+
+export function useAccountData(...args: [Account] | [string, boolean]): ObservedAccountData {
+  const { accountID, testnet } = resolveAccountArgs(...args)
   const horizon = useHorizon(testnet)
 
   // Set up subscription to remote data immediately
@@ -28,7 +47,11 @@ export function useAccountData(accountID: string, testnet: boolean): ObservedAcc
   return accountData
 }
 
-export function useRecentTransactions(accountID: string, testnet: boolean): ObservedRecentTxs {
+export function useRecentTransactions(account: Account): ObservedRecentTxs
+export function useRecentTransactions(accountID: string, testnet: boolean): ObservedRecentTxs
+
+export function useRecentTransactions(...args: [Account] | [string, boolean]): ObservedRecentTxs {
+  const { accountID, testnet } = resolveAccountArgs(...args)
   const horizon = useHorizon(testnet)
 
   // Set up subscription to remote data immediately

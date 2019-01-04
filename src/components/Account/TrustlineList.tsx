@@ -29,7 +29,7 @@ interface Props {
 }
 
 function TrustlineList(props: Props) {
-  const accountData = useAccountData(props.account.accountID || props.account.publicKey, props.account.testnet)
+  const accountData = useAccountData(props.account)
 
   const isAssetAlreadyAdded = (asset: Asset) => {
     return accountData.balances.some(

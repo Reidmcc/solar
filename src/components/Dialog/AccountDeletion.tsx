@@ -36,7 +36,7 @@ function AccountDeletionDialog(props: Props) {
           Make sure to backup your private key if there are still funds on the account!
         </DialogContentText>
         <DialogContentText style={{ marginTop: 16 }}>
-          Balance: <AccountBalances publicKey={props.account.accountID || props.account.publicKey} testnet={props.account.testnet} />
+          Balance: <AccountBalances account={props.account} />
         </DialogContentText>
         <DialogActions style={{ marginTop: 24 }}>
           <Button color="primary" onClick={props.onClose} style={{ marginRight: 16 }}>

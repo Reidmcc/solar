@@ -27,7 +27,7 @@ import { useAccountData, useHorizon, useRecentTransactions } from "../hooks"
 import { hasSigned } from "../lib/transaction"
 
 function AccountActions(props: { account: Account; onOpenPaymentDrawer: () => void }) {
-  const accountData = useAccountData(props.account.accountID || props.account.publicKey, props.account.testnet)
+  const accountData = useAccountData(props.account)
   return (
     <Button
       variant="contained"
@@ -101,7 +101,7 @@ function AccountPage(props: Props) {
   }
 
   const horizon = useHorizon(account.testnet)
-  const recentTxs = useRecentTransactions(account.accountID || account.publicKey, account.testnet)
+  const recentTxs = useRecentTransactions(account)
 
   return (
     <>

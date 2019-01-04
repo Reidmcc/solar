@@ -37,7 +37,7 @@ const AccountDetails = (props: { account: Account; settings: SettingsContextType
   return (
     <div>
       <DetailContent>
-        <AccountBalances publicKey={account.accountID || account.publicKey} testnet={account.testnet} />
+        <AccountBalances account={account} />
       </DetailContent>
       <DetailContent>
         <AccountPublicKey publicKey={account.accountID || account.publicKey} />

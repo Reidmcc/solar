@@ -1,5 +1,6 @@
 import React from "react"
 import { AccountResponse } from "stellar-sdk"
+import { Account } from "../../context/accounts"
 import { useAccountData } from "../../hooks"
 import InlineLoader from "../InlineLoader"
 
@@ -94,8 +95,21 @@ const zeroXLMBalance = {
   balance: "0"
 }
 
-function AccountBalances(props: { publicKey: string; testnet: boolean }) {
-  const accountData = useAccountData(props.publicKey, props.testnet)
+type AccountBalancesProps =
+  | {
+      publicKey: string
+      testnet: boolean
+    }
+  | {
+      account: Account
+    }
+
+function AccountBalances(props: AccountBalancesProps) {
+  const accountData =
+    "account" in props
+      ? useAccountData(props.account.accountID || props.account.publicKey, props.account.testnet)
+      : useAccountData(props.publicKey, props.testnet)
+
   return accountData.loading ? (
     <InlineLoader />
   ) : accountData.activated ? (
