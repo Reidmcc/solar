@@ -67,7 +67,7 @@ interface Props extends RouteComponentProps<any, any, any> {
 function AccountHeaderCard(props: Props) {
   const { changePassword, removePassword } = useContext(AccountsContext)
   const [openDialog, setOpenDialog] = useState<DialogID | null>(null)
-  const accountData = useAccountData(props.account.publicKey, props.account.testnet)
+  const accountData = useAccountData(props.account.accountID || props.account.publicKey, props.account.testnet)
 
   return (
     <Card

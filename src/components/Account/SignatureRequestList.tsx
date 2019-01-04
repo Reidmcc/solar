@@ -73,7 +73,7 @@ export const InteractiveSignatureRequestList = (props: {
     <TransactionSender account={props.account}>
       {({ sendTransaction }) => (
         <SignatureRequestList
-          accountPublicKey={props.account.publicKey}
+          accountPublicKey={props.account.accountID || props.account.publicKey}
           icon={props.icon}
           onOpenTransaction={sendTransaction}
           signatureRequests={props.signatureRequests}

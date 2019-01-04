@@ -27,7 +27,7 @@ import { useAccountData, useHorizon, useRecentTransactions } from "../hooks"
 import { hasSigned } from "../lib/transaction"
 
 function AccountActions(props: { account: Account; onOpenPaymentDrawer: () => void }) {
-  const accountData = useAccountData(props.account.publicKey, props.account.testnet)
+  const accountData = useAccountData(props.account.accountID || props.account.publicKey, props.account.testnet)
   return (
     <Button
       variant="contained"
@@ -129,7 +129,7 @@ function AccountPage(props: Props) {
           <>
             {props.settings.multiSignature ? <PendingMultisigTransactions account={account} /> : null}
             <TransactionList
-              accountPublicKey={account.publicKey}
+              accountPublicKey={account.accountID || account.publicKey}
               background="transparent"
               title="Recent transactions"
               testnet={account.testnet}

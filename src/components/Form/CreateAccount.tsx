@@ -203,7 +203,7 @@ const AccountCreationForm = (props: AccountCreationFormProps) => {
             <TextField
               disabled={!formValues.isCosigKeypair}
               error={Boolean(errors.accountID)}
-              label={errors.accountID ? renderFormFieldError(errors.accountID) : "Account public key"}
+              label={errors.accountID ? renderFormFieldError(errors.accountID) : "Remote account public key"}
               placeholder="GABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGHIJKLMNOPQRS"
               fullWidth
               margin="normal"

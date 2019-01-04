@@ -45,7 +45,7 @@ const AccountDetails = (props: { account: Account; settings: SettingsContextType
       {isCosignatureKeypair ? (
         <DetailContent>
           <AccountPublicKey publicKey={account.publicKey} />
-          &nbsp;(Co-Signature Key)
+          &nbsp;(Local Co-Signature Key)
         </DetailContent>
       ) : null}
     </div>
