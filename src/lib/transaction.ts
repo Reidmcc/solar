@@ -61,7 +61,7 @@ export async function createTransaction(operations: Array<xdr.Operation<any>>, o
 
   selectNetwork(walletAccount.testnet)
 
-  const account = await horizon.loadAccount(walletAccount.publicKey)
+  const account = await horizon.loadAccount(walletAccount.accountID || walletAccount.publicKey)
   const builder = new TransactionBuilder(account, { memo: memo || undefined })
 
   for (const operation of operations) {
