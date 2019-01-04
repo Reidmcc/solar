@@ -8,7 +8,7 @@ import { AspectRatioBox, VerticalLayout } from "./Layout/Box"
 
 const Container = (props: { children: React.ReactNode }) => {
   return (
-    <AspectRatioBox width="250px" maxWidth="40vw" ratio="3:2">
+    <AspectRatioBox width="100%" maxWidth="40vw" ratio="3:2">
       <VerticalLayout padding={10} height="100%" alignItems="center" justifyContent="center">
         {props.children}
       </VerticalLayout>
